@@ -1,0 +1,82 @@
+[project]
+name = "main"
+description = "Template"
+license-files = { paths = ["LICENSE"] }
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.7"
+authors = [
+    { name = "Marcos Bressan", email = "bressan@dee.ufc.br" }
+]
+urls = { Homepage = "https://github.com/bressanmarcos/main" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "autoflake",
+    "bandit",
+    "mypy",
+    "pre-commit",
+    "pytest",
+    "python-semantic-release",
+    "ruff>=0.3.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.0.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "main/__version__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["main"]
+
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 79
+target-version = "py37"
+
+[tool.ruff.lint]
+extend-select = ["D"]
+ignore = [
+    "D203",  # 1 blank line required before class docstring
+    "D213",  # Multi-line docstring summary should start at the second line
+    "COM812", # Missing trailing comma in Python 3
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.format]
+docstring-code-format = true
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.semantic_release]
+branch = "main"
+version_variables = ["main/__version__.py:__version__"]
+tag_format = "${version}"
+
+[tool.semantic_release.plugins]
+"@semantic-release/commit-analyzer" = { preset = "angular" }
+"@semantic-release/release-notes-generator" = { preset = "angular" }
+"@semantic-release/changelog" = { changelogFile = "CHANGELOG.md" }
+"@semantic-release/git" = { assets = ["CHANGELOG.md", "main/__version__.py", "setup.py"], message = "chore(release): ${nextRelease.version} [skip ci]" }
+"@semantic-release/github" = { assets = "dist/**" }
+
+[tool.bandit]
+skips = ["B101"]  # Skip assert statements warning
